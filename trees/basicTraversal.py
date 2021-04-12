@@ -1,3 +1,6 @@
+from node import Node
+import math
+
 def createTree():
     node = Node(1)
     node.left = Node(2)
@@ -23,20 +26,53 @@ def levelOrder(root):
         print(node.data)
         
         queue.append(node.left) if node.left != None else ''
-        queue.append(node.right) if node.left != None else ''
+        queue.append(node.right) if node.right != None else ''
+
+def zigZag(root): # assumption binary tree
+    right = True
+    current = []
+    after = []
+    current.append(root)
+    
+    while(len(current) != 0):
+        node = current.pop(len(current) - 1)
+        print(node.data)
+
+        if right:
+            after.append(node.left) if node.left != None else ''
+            after.append(node.right) if node.right != None else ''
+        else:
+            after.append(node.right) if node.right != None else ''
+            after.append(node.left) if node.left != None else ''
+        
+        if len(current) == 0:
+            right = not right 
+            current = after
+            after = []
 
 
-class Node: 
-    left = None 
-    right = None
-    data = None
+def minTree(array, start, end):
+    '''
+        Given a sorted array with unique integers, create a bst with min height
+    '''
+    if start > end : 
+        return None
+    
+    mid = math.ceil((start + end)/2)
+    
+    node = Node(array[mid])
+    node.left = minTree(array, start, mid-1)
+    node.right = minTree(array, mid+1, end)
 
-    def __init__(self, data):
-        self.data = data
+    return node
+        
 
-    def __repr__(self):
-        return '%s' % self.data
+
+
 
 
 tree = createTree()
-levelOrder(tree)
+# zigZag(tree)
+root = minTree([4,5,6,7,8,9], 0, 5)
+
+levelOrder(root)
